@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AuthUserDtoResponse {
+export class AuthDtoResponse {
   @ApiProperty({
     description: 'Bearer token de autenticação',
     example:

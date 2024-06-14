@@ -2,14 +2,13 @@ import { GlobalErrorDto } from 'src/exceptions/globalErrorDto';
 import { ApiProperty } from '@nestjs/swagger';
 import { HttpStatus } from '@nestjs/common';
 
-export class AuthErrUserDtoResponseNotFound extends GlobalErrorDto {
+export class AuthTokenNotFound extends GlobalErrorDto {
   @ApiProperty({
-    example: HttpStatus.NOT_FOUND,
+    example: HttpStatus.UNAUTHORIZED,
   })
   statusCode: number;
   @ApiProperty({
-    example:
-      'O e-mail não está cadastrado. Por favor, verifique se está correto.',
+    example: 'Token não fornecido',
   })
   message: string;
 }

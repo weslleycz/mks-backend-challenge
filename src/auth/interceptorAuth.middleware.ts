@@ -8,14 +8,11 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { JWTService, RedisService } from '../services';
+import { RedisService } from '../services';
 
 @Injectable()
-export class InterceptorJwt implements NestInterceptor {
-  constructor(
-    private readonly redisService: RedisService,
-    private readonly jwtservice: JWTService,
-  ) {}
+export class InterceptorAuth implements NestInterceptor {
+  constructor(private readonly redisService: RedisService) {}
 
   async intercept(
     context: ExecutionContext,
@@ -31,8 +28,6 @@ export class InterceptorJwt implements NestInterceptor {
     if (!token) {
       throw new HttpException('Token não fornecido', HttpStatus.UNAUTHORIZED);
     }
-    const payload = await this.jwtservice.decodeJwt(token);
-    console.log(payload);
     const tokenValue = await this.redisService.getValue(token);
     if (!tokenValue) {
       throw new HttpException('Sessão expirada', HttpStatus.UNAUTHORIZED);

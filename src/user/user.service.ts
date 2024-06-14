@@ -8,8 +8,8 @@ import {
   UpdateUserDto,
 } from './dto';
 import { UserRepository } from './repository';
-import { AuthUserDto } from './dto/auth.user.dto';
-import { AuthUserDtoResponse } from './dto/authResponse.user.dto';
+import { AuthDto, AuthDtoResponse } from 'src/auth/dto';
+import { UpdateResponse } from './dto/updateResponse.use.dto';
 
 @Injectable()
 export class UserService {
@@ -83,12 +83,39 @@ export class UserService {
     }
   }
 
-  async update(id: string, data: UpdateUserDto) {
+  async update(data: UpdateUserDto): Promise<UpdateResponse> {
+    const { id, email, name, password } = data;
     try {
-    } catch (error) {}
+      if (!password) {
+        await this.userRepository.update(id, {
+          email,
+          name,
+          updatedAt: new Date(),
+        });
+      } else {
+        const hashPassword = await this.bcryptService.hashPassword(
+          data.password,
+        );
+        await this.userRepository.update(id, {
+          email,
+          name,
+          password: hashPassword,
+          updatedAt: new Date(),
+        });
+      }
+      return {
+        message: 'Usuario atualizado',
+        statusCode: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        'Não foi possível atualizar o usuário.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  async auth(data: AuthUserDto): Promise<AuthUserDtoResponse> {
+  async login(data: AuthDto): Promise<AuthDtoResponse> {
     const { email, password } = data;
     const user = await this.userRepository.findOne({
       where: {

@@ -4,22 +4,37 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { InterceptorAuth } from 'src/auth/interceptorAuth.middleware';
 import {
   CreateUserDto,
   CreateUserResponseDto,
-  UserExistsErrResponseDto,
   GetAllResponseDto,
-  GetUserResponseDto,
   GetUserErrResponseDto,
+  GetUserResponseDto,
+  UpdateUserDto,
+  UserExistsErrResponseDto,
 } from './dto';
 import { UserService } from './user.service';
-import { AuthUserDto } from './dto/auth.user.dto';
-import { AuthUserDtoResponse } from './dto/authResponse.user.dto';
-import { AuthErrUserDtoResponseNotFound } from './dto/authErrResponseNotFound.user.dto';
-import { AuthErrUserDtoResponseUnauthorized } from './dto/authErrResponseUnauthorized.user.dto';
+import {
+  AuthDto,
+  AuthDtoResponse,
+  AuthErrDtoResponseNotFound,
+  AuthErrDtoResponseUnauthorized,
+} from 'src/auth/dto';
+import { AuthTokenNotFound } from 'src/auth/dto/authTokenNotFound.dto';
+import { AuthTokenUnauthorized } from 'src/auth/dto/authTokenUnauthorized.dto';
+import { UpdateResponse } from './dto/updateResponse.use.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -79,20 +94,43 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Autenticação bem-sucedida.',
-    type: AuthUserDtoResponse,
+    type: AuthDtoResponse,
   })
   @ApiResponse({
     status: 404,
     description:
       'O e-mail não está cadastrado. Por favor, verifique se está correto.',
-    type: AuthErrUserDtoResponseNotFound,
+    type: AuthErrDtoResponseNotFound,
   })
   @ApiResponse({
     status: 401,
     description: 'Senha incorreta. Tente novamente.',
-    type: AuthErrUserDtoResponseUnauthorized,
+    type: AuthErrDtoResponseUnauthorized,
   })
-  async auth(@Body() body: AuthUserDto): Promise<AuthUserDtoResponse> {
-    return await this.userService.auth(body);
+  async login(@Body() body: AuthDto) {
+    return await this.userService.login(body);
+  }
+
+  @Patch()
+  @ApiOperation({ summary: 'Atualizar informações do usuário' })
+  @UseInterceptors(InterceptorAuth)
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 401,
+    description: 'Token não fornecido',
+    type: AuthTokenNotFound,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Sessão expirada',
+    type: AuthTokenUnauthorized,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário atualizado',
+    type: UpdateResponse,
+  })
+  async update(@Body() body: UpdateUserDto): Promise<UpdateResponse> {
+    return await this.userService.update(body);
   }
 }
