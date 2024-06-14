@@ -1,12 +1,22 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateUserDto,
   CreateUserResponseDto,
   UserExistsErrResponseDto,
 } from './dto';
+import {
+  GetAllResponseDto,
+  GetUserResponseDto,
+} from './dto/getAllResponse.user.dto';
 import { UserService } from './user.service';
-import { GetAllResponseDto } from './dto/getAllResponse.user.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -41,5 +51,20 @@ export class UserController {
   })
   async getAll(): Promise<GetAllResponseDto> {
     return await this.userService.getAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obter usuário por id' })
+  @ApiParam({ name: 'id', description: 'ID do usuário' })
+  @ApiResponse({
+    status: 200,
+    description: 'Detalhes do usuário.',
+    type: GetUserResponseDto,
+  })
+  async getById(
+    @Param('id', ParseUUIDPipe)
+    id: string,
+  ): Promise<GetUserResponseDto> {
+    return await this.userService.getById(id);
   }
 }

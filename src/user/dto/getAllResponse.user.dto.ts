@@ -4,7 +4,7 @@ import { UserEntity } from 'user/entities';
 
 type UserOmitPassword = Omit<UserEntity, 'password'>;
 
-class UserOmitPasswordClass implements UserOmitPassword {
+export class UserOmitPasswordDto implements UserOmitPassword {
   @ApiProperty()
   id: string;
   @ApiProperty()
@@ -19,7 +19,7 @@ class UserOmitPasswordClass implements UserOmitPassword {
 
 export class GetAllResponseDto {
   @ApiProperty({
-    example: 200,
+    example: HttpStatus.OK,
   })
   statusCode: HttpStatus;
 
@@ -29,7 +29,25 @@ export class GetAllResponseDto {
   message: string;
 
   @ApiProperty({
-    type: [UserOmitPasswordClass],
+    type: [UserOmitPasswordDto],
   })
   users: Array<UserOmitPassword>;
+}
+
+export class GetUserResponseDto implements UserOmitPassword {
+  @ApiProperty()
+  id: string;
+  @ApiProperty()
+  name: string;
+  @ApiProperty()
+  email: string;
+  @ApiProperty()
+  createdAt: Date;
+  @ApiProperty()
+  updatedAt: Date;
+
+  @ApiProperty({
+    example: HttpStatus.OK,
+  })
+  statusCode: HttpStatus;
 }
