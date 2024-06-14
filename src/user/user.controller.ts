@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateUserDto,
@@ -6,6 +6,7 @@ import {
   UserExistsErrResponseDto,
 } from './dto';
 import { UserService } from './user.service';
+import { GetAllResponseDto } from './dto/getAllResponse.user.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -25,7 +26,20 @@ export class UserController {
       'Não é possível criar uma conta porque esse e-mail já está associado a outra conta.',
     type: UserExistsErrResponseDto,
   })
-  create(@Body() createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
-    return this.userService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<CreateUserResponseDto> {
+    return await this.userService.create(createUserDto);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Obter todos os usuários' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de todos os usuários.',
+    type: GetAllResponseDto,
+  })
+  async getAll(): Promise<GetAllResponseDto> {
+    return await this.userService.getAll();
   }
 }

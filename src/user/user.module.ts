@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
+import { JWTService, RedisService, BcryptService } from 'services';
 import { UserRepository } from './repository';
-import { BcryptService, JWTService, RedisService } from 'services';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 @Module({
   controllers: [UserController],
   providers: [
     UserService,
     UserRepository,
-    BcryptService,
     JWTService,
     RedisService,
+    BcryptService,
   ],
 })
 export class UserModule {}

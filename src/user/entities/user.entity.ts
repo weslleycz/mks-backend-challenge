@@ -19,4 +19,12 @@ export class UserEntity {
   @Column()
   @ApiProperty()
   password: string;
+
+  @Column()
+  @ApiProperty()
+  createdAt: Date;
+
+  @Column()
+  @ApiProperty()
+  updatedAt: Date;
 }
