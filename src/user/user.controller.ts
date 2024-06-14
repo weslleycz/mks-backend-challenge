@@ -15,8 +15,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { InterceptorAuth } from 'src/auth/interceptorAuth.middleware';
+import { InterceptorAuth } from '../middlewares/interceptorAuth.middleware';
 import {
+  AuthDto,
+  AuthDtoResponse,
+  AuthErrDtoResponseNotFound,
+  AuthErrDtoResponseUnauthorized,
+  AuthTokenNotFound,
+  AuthTokenUnauthorized,
   CreateUserDto,
   CreateUserResponseDto,
   GetAllResponseDto,
@@ -25,16 +31,8 @@ import {
   UpdateUserDto,
   UserExistsErrResponseDto,
 } from './dto';
-import { UserService } from './user.service';
-import {
-  AuthDto,
-  AuthDtoResponse,
-  AuthErrDtoResponseNotFound,
-  AuthErrDtoResponseUnauthorized,
-} from 'src/auth/dto';
-import { AuthTokenNotFound } from 'src/auth/dto/authTokenNotFound.dto';
-import { AuthTokenUnauthorized } from 'src/auth/dto/authTokenUnauthorized.dto';
 import { UpdateResponse } from './dto/updateResponse.use.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 @ApiTags('User')
@@ -92,7 +90,7 @@ export class UserController {
   @Post('/auth')
   @ApiOperation({ summary: 'Autenticar usuário' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Autenticação bem-sucedida.',
     type: AuthDtoResponse,
   })
@@ -107,7 +105,7 @@ export class UserController {
     description: 'Senha incorreta. Tente novamente.',
     type: AuthErrDtoResponseUnauthorized,
   })
-  async login(@Body() body: AuthDto) {
+  async login(@Body() body: AuthDto): Promise<AuthDtoResponse> {
     return await this.userService.login(body);
   }
 

@@ -1,14 +1,13 @@
-import { GlobalErrorDto } from 'src/exceptions/globalErrorDto';
 import { ApiProperty } from '@nestjs/swagger';
 import { HttpStatus } from '@nestjs/common';
 
-export class AuthErrDtoResponseUnauthorized extends GlobalErrorDto {
+export class AuthTokenUnauthorized {
   @ApiProperty({
     example: HttpStatus.UNAUTHORIZED,
   })
   statusCode: number;
   @ApiProperty({
-    example: 'Senha incorreta. Tente novamente.',
+    example: 'Sessão expirada',
   })
   message: string;
 }

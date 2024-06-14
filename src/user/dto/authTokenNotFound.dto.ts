@@ -1,8 +1,7 @@
-import { GlobalErrorDto } from 'src/exceptions/globalErrorDto';
 import { ApiProperty } from '@nestjs/swagger';
 import { HttpStatus } from '@nestjs/common';
 
-export class AuthTokenNotFound extends GlobalErrorDto {
+export class AuthTokenNotFound {
   @ApiProperty({
     example: HttpStatus.UNAUTHORIZED,
   })

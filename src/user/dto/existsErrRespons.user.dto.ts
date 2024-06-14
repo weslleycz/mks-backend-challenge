@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GlobalErrorDto } from '../../exceptions/globalErrorDto';
 
-export class UserExistsErrResponseDto extends GlobalErrorDto {
+export class UserExistsErrResponseDto {
   @ApiProperty({
     example: 409,
   })

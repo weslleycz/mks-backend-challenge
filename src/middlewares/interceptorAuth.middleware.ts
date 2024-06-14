@@ -3,14 +3,12 @@ import {
   ExecutionContext,
   HttpException,
   HttpStatus,
-  Injectable,
   NestInterceptor,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { RedisService } from '../services';
 
-@Injectable()
 export class InterceptorAuth implements NestInterceptor {
   constructor(private readonly redisService: RedisService) {}
 

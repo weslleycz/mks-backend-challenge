@@ -7,9 +7,10 @@ import {
   GetUserResponseDto,
   UpdateUserDto,
 } from './dto';
-import { UserRepository } from './repository';
-import { AuthDto, AuthDtoResponse } from 'src/auth/dto';
 import { UpdateResponse } from './dto/updateResponse.use.dto';
+import { UserRepository } from './repositorys';
+import { AuthDto } from './dto/auth.dto';
+import { AuthDtoResponse } from './dto/authResponse.dto';
 
 @Injectable()
 export class UserService {
@@ -74,10 +75,14 @@ export class UserService {
         },
         select: ['createdAt', 'email', 'id', 'name', 'updatedAt'],
       });
-      return {
-        ...user,
-        statusCode: HttpStatus.OK,
-      };
+      if (user) {
+        return {
+          ...user,
+          statusCode: HttpStatus.OK,
+        };
+      } else {
+        throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+      }
     } catch (error) {
       throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
     }
@@ -125,7 +130,7 @@ export class UserService {
     if (!user) {
       throw new HttpException(
         'O e-mail não está cadastrado. Por favor, verifique se está correto.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.UNAUTHORIZED,
       );
     }
 

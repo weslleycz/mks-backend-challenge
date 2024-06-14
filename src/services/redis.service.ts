@@ -21,43 +21,18 @@ export class RedisService {
     value: string,
     expiresInSeconds?: number,
   ): Promise<void> {
-    if (!process.env.NODE_ENV) {
-      if (expiresInSeconds) {
-        await this.redisClient.set(key, value, 'EX', expiresInSeconds);
-      } else {
-        await this.redisClient.set(key, value);
-      }
+    if (expiresInSeconds) {
+      await this.redisClient.set(key, value, 'EX', expiresInSeconds);
     } else {
-      const memoryCache = await caching('memory', {
-        ttl: 10 * 1000,
-      });
-      if (expiresInSeconds) {
-        await memoryCache.set(key, value, expiresInSeconds * 1000);
-      } else {
-        await memoryCache.set(key, value);
-      }
+      await this.redisClient.set(key, value);
     }
   }
 
   async getValue(key: string): Promise<string | null> {
-    if (!process.env.NODE_ENV) {
-      return this.redisClient.get(key);
-    } else {
-      const memoryCache = await caching('memory', {
-        ttl: 10 * 1000,
-      });
-      return await memoryCache.get(key);
-    }
+    return this.redisClient.get(key);
   }
 
   async delValue(key: string): Promise<void> {
-    if (!process.env.NODE_ENV) {
-      await this.redisClient.del(key);
-    } else {
-      const memoryCache = await caching('memory', {
-        ttl: 10 * 1000,
-      });
-      await memoryCache.del(key);
-    }
+    await this.redisClient.del(key);
   }
 }

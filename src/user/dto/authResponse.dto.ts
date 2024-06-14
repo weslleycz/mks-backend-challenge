@@ -15,7 +15,7 @@ export class AuthDtoResponse {
   message: string;
 
   @ApiProperty({
-    example: 200,
+    example: 201,
   })
   statusCode: number;
 }

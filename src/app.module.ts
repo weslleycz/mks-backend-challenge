@@ -1,13 +1,13 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { DatabaseModule } from './database';
 import { LogMiddleware } from './middlewares';
 import {
-  LoggerService,
-  RedisService,
   BcryptService,
   JWTService,
+  LoggerService,
+  RedisService,
 } from './services';
 import { UserModule } from './user';
-import { DatabaseModule } from './database';
 
 @Module({
   imports: [UserModule, DatabaseModule],

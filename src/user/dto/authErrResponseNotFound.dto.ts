@@ -1,8 +1,7 @@
-import { GlobalErrorDto } from 'src/exceptions/globalErrorDto';
-import { ApiProperty } from '@nestjs/swagger';
 import { HttpStatus } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class AuthErrDtoResponseNotFound extends GlobalErrorDto {
+export class AuthErrDtoResponseNotFound {
   @ApiProperty({
     example: HttpStatus.NOT_FOUND,
   })
