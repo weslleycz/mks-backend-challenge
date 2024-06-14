@@ -16,6 +16,10 @@ import {
   GetUserErrResponseDto,
 } from './dto';
 import { UserService } from './user.service';
+import { AuthUserDto } from './dto/auth.user.dto';
+import { AuthUserDtoResponse } from './dto/authResponse.user.dto';
+import { AuthErrUserDtoResponseNotFound } from './dto/authErrResponseNotFound.user.dto';
+import { AuthErrUserDtoResponseUnauthorized } from './dto/authErrResponseUnauthorized.user.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -35,10 +39,8 @@ export class UserController {
       'Não é possível criar uma conta porque esse e-mail já está associado a outra conta.',
     type: UserExistsErrResponseDto,
   })
-  async create(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<CreateUserResponseDto> {
-    return await this.userService.create(createUserDto);
+  async create(@Body() body: CreateUserDto): Promise<CreateUserResponseDto> {
+    return await this.userService.create(body);
   }
 
   @Get()
@@ -70,5 +72,27 @@ export class UserController {
     id: string,
   ): Promise<GetUserResponseDto> {
     return await this.userService.getById(id);
+  }
+
+  @Post('/auth')
+  @ApiOperation({ summary: 'Autenticar usuário' })
+  @ApiResponse({
+    status: 200,
+    description: 'Autenticação bem-sucedida.',
+    type: AuthUserDtoResponse,
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'O e-mail não está cadastrado. Por favor, verifique se está correto.',
+    type: AuthErrUserDtoResponseNotFound,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Senha incorreta. Tente novamente.',
+    type: AuthErrUserDtoResponseUnauthorized,
+  })
+  async auth(@Body() body: AuthUserDto): Promise<AuthUserDtoResponse> {
+    return await this.userService.auth(body);
   }
 }

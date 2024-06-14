@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserResponseDto {
+export class AuthUserDtoResponse {
   @ApiProperty({
     description: 'Bearer token de autenticação',
     example:
@@ -9,8 +9,8 @@ export class CreateUserResponseDto {
   token: string;
 
   @ApiProperty({
-    description: 'Mensagem de confirmação da criação do usuário',
-    example: 'Usuário criado com sucesso!',
+    description: 'Mensagem de confirmação de login',
+    example: 'Login realizado com sucesso',
   })
   message: string;
 

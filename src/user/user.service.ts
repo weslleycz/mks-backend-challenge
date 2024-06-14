@@ -8,6 +8,8 @@ import {
   UpdateUserDto,
 } from './dto';
 import { UserRepository } from './repository';
+import { AuthUserDto } from './dto/auth.user.dto';
+import { AuthUserDtoResponse } from './dto/authResponse.user.dto';
 
 @Injectable()
 export class UserService {
@@ -84,5 +86,34 @@ export class UserService {
   async update(id: string, data: UpdateUserDto) {
     try {
     } catch (error) {}
+  }
+
+  async auth(data: AuthUserDto): Promise<AuthUserDtoResponse> {
+    const { email, password } = data;
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!user) {
+      throw new HttpException(
+        'O e-mail não está cadastrado. Por favor, verifique se está correto.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (await this.bcryptService.comparePasswords(password, user.password)) {
+      const token = await this.jWTService.login(user.id, '72h');
+      return {
+        message: 'Autenticação bem-sucedida.',
+        statusCode: HttpStatus.OK,
+        token,
+      };
+    } else {
+      throw new HttpException(
+        'Senha incorreta. Tente novamente.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
   }
 }
