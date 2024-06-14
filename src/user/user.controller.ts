@@ -11,11 +11,10 @@ import {
   CreateUserDto,
   CreateUserResponseDto,
   UserExistsErrResponseDto,
-} from './dto';
-import {
   GetAllResponseDto,
   GetUserResponseDto,
-} from './dto/getAllResponse.user.dto';
+  GetUserErrResponseDto,
+} from './dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -60,6 +59,11 @@ export class UserController {
     status: 200,
     description: 'Detalhes do usuário.',
     type: GetUserResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Usuário não encontrado',
+    type: GetUserErrResponseDto,
   })
   async getById(
     @Param('id', ParseUUIDPipe)

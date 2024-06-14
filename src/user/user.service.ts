@@ -1,10 +1,12 @@
-import { HttpException, HttpStatus, Injectable, Param } from '@nestjs/common';
-import { BcryptService, JWTService, RedisService } from 'services';
-import { CreateUserDto, CreateUserResponseDto } from './dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BcryptService, JWTService, RedisService } from '../services';
 import {
+  CreateUserDto,
+  CreateUserResponseDto,
   GetAllResponseDto,
   GetUserResponseDto,
-} from './dto/getAllResponse.user.dto';
+  UpdateUserDto,
+} from './dto';
 import { UserRepository } from './repository';
 
 @Injectable()
@@ -62,7 +64,7 @@ export class UserService {
     }
   }
 
-  async getById(@Param('id') id: string): Promise<GetUserResponseDto> {
+  async getById(id: string): Promise<GetUserResponseDto> {
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -77,5 +79,10 @@ export class UserService {
     } catch (error) {
       throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
     }
+  }
+
+  async update(id: string, data: UpdateUserDto) {
+    try {
+    } catch (error) {}
   }
 }

@@ -1,14 +1,14 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
-export abstract class GlobalErrorDto {
+export class GlobalErrorDto {
   @ApiProperty({
     description: 'Código de status HTTP do erro',
   })
-  abstract statusCode: HttpStatus;
+  statusCode: HttpStatus;
 
   @ApiProperty({
     description: 'Mensagem de erro',
   })
-  abstract message: string;
+  message: string;
 }

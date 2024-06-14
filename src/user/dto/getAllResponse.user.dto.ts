@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from 'user/entities';
+import { UserEntity } from '../entities';
 
 type UserOmitPassword = Omit<UserEntity, 'password'>;
 
@@ -50,4 +50,16 @@ export class GetUserResponseDto implements UserOmitPassword {
     example: HttpStatus.OK,
   })
   statusCode: HttpStatus;
+}
+
+export class GetUserErrResponseDto {
+  @ApiProperty({
+    example: HttpStatus.NOT_FOUND,
+  })
+  statusCode: HttpStatus;
+
+  @ApiProperty({
+    example: 'Usuário não encontrado',
+  })
+  message: string;
 }
