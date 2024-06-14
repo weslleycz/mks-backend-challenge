@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as bodyParser from 'body-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { AllExceptionsFilter } from './exceptions/all-exceptions.filter';
 import helmet from 'helmet';
 
 async function bootstrap() {
@@ -21,12 +22,13 @@ async function bootstrap() {
     .setTitle('MKS Backend-Challenge ')
     .setDescription('Desafio MKS')
     .setVersion('1.0')
-    .addTag('nestjs')
     .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/doc', app, document);
+
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // Configura as opções de CORS
   const corsOptions: CorsOptions = {

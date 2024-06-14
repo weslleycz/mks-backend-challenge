@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  CreateUserDto,
+  CreateUserResponseDto,
+  UserExistsErrResponseDto,
+} from './dto';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
+@ApiTags('User')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @ApiOperation({ summary: 'Criar um novo usuário' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuário criado com sucesso.',
+    type: CreateUserResponseDto,
+  })
+  @ApiResponse({
+    status: 409,
+    description:
+      'Não é possível criar uma conta porque esse e-mail já está associado a outra conta.',
+    type: UserExistsErrResponseDto,
+  })
+  create(@Body() createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
     return this.userService.create(createUserDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
   }
 }

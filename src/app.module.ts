@@ -1,13 +1,18 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { LogMiddleware } from './middlewares';
-import { LoggerService } from './services';
-import { UserModule } from './user/user.module';
-import { DatabaseModule } from './database/database.module';
+import {
+  LoggerService,
+  RedisService,
+  BcryptService,
+  JWTService,
+} from './services';
+import { UserModule } from './user';
+import { DatabaseModule } from './database';
 
 @Module({
   imports: [UserModule, DatabaseModule],
   controllers: [],
-  providers: [LoggerService],
+  providers: [LoggerService, BcryptService, RedisService, JWTService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

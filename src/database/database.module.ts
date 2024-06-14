@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 // import { Movie } from 'src/movies/entities/movie.entity';
-import { User } from 'src/user/entities/user.entity';
+import { UserEntity } from 'user/entities/user.entity';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ dotenv.config();
       synchronize: true,
       logging: false,
       logger: 'file',
-      entities: [User],
+      entities: [UserEntity],
     }),
   ],
 })
