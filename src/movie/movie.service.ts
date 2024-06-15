@@ -6,6 +6,7 @@ import { UserRepository } from '../user/repositorys/user.repository';
 import { CreateResponseMovieDto } from './dtos/create-Response.user.dto';
 import { AuthToken } from '../auth/dtos';
 import { MovieEntity } from './entities';
+import { MovieResposeRemoveDto } from './dtos/remove.movie.dto';
 
 @Injectable()
 export class MovieService {
@@ -36,7 +37,6 @@ export class MovieService {
         statusCode: HttpStatus.OK,
       };
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         'Não foi possível criar o filme.',
         HttpStatus.BAD_REQUEST,
@@ -52,15 +52,47 @@ export class MovieService {
     return user.movies;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  async findOne(id: string) {
+    try {
+      const movie = await this.movieRepository.findOne({
+        where: {
+          id,
+        },
+      });
+      if (movie) {
+        return {
+          ...movie,
+        };
+      } else {
+        throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
+    }
   }
 
   update(id: number, updateMovieDto: UpdateMovieDto) {
     return `This action updates a #${id} movie`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async remove(id: string): Promise<MovieResposeRemoveDto> {
+    try {
+      const movie = await this.movieRepository.findOne({
+        where: {
+          id,
+        },
+      });
+      if (movie) {
+        await this.movieRepository.delete(id);
+        return {
+          message: 'Filme removido',
+          statusCode: HttpStatus.OK,
+        };
+      } else {
+        throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
+    }
   }
 }
