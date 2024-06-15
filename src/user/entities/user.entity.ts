@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { MovieEntity } from '../../movie/entities';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class UserEntity {
@@ -27,4 +28,7 @@ export class UserEntity {
   @Column()
   @ApiProperty()
   updatedAt: Date;
+
+  @OneToMany(() => MovieEntity, (movie) => movie.user)
+  movie: MovieEntity[];
 }

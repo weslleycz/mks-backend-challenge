@@ -15,12 +15,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  AuthDto,
-  AuthDtoResponse,
-  AuthErrDtoResponseNotFound,
-  AuthErrDtoResponseUnauthorized,
-  AuthTokenNotFound,
-  AuthTokenUnauthorized,
   CreateUserDto,
   CreateUserResponseDto,
   GetAllResponseDto,
@@ -31,6 +25,14 @@ import {
 } from './dto';
 import { UpdateResponse } from './dto/updateResponse.use.dto';
 import { UserService } from './user.service';
+import {
+  AuthDtoResponse,
+  AuthTokenNotFound,
+  AuthTokenUnauthorized,
+  AuthErrDtoResponseNotFound,
+  AuthDto,
+  AuthErrDtoResponseUnauthorized,
+} from '../auth/dto';
 
 @Controller('user')
 @ApiTags('User')

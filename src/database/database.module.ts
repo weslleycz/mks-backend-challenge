@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 // import { Movie } from 'src/movies/entities/movie.entity';
 import { UserEntity } from '../user/entities';
+import { MovieEntity } from '../movie/entities';
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ dotenv.config();
           type: 'sqlite',
           database: ':memory:',
           dropSchema: true,
-          entities: [UserEntity],
+          entities: [UserEntity, MovieEntity],
           synchronize: true,
           logging: false,
         })
@@ -27,7 +28,7 @@ dotenv.config();
           synchronize: true,
           logging: false,
           logger: 'file',
-          entities: [UserEntity],
+          entities: [UserEntity, MovieEntity],
         }),
   ],
 })

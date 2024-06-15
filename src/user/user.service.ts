@@ -1,4 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { AuthDto } from '../auth/dto/auth.dto';
+import { AuthDtoResponse } from '../auth/dto/authResponse.dto';
 import { BcryptService, JWTService, RedisService } from '../services';
 import {
   CreateUserDto,
@@ -9,8 +11,7 @@ import {
 } from './dto';
 import { UpdateResponse } from './dto/updateResponse.use.dto';
 import { UserRepository } from './repositorys';
-import { AuthDto } from './dto/auth.dto';
-import { AuthDtoResponse } from './dto/authResponse.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -19,6 +20,7 @@ export class UserService {
     private readonly bcryptService: BcryptService,
     private readonly redisService: RedisService,
     private readonly jWTService: JWTService,
+    private readonly authService: AuthService,
   ) {}
   async create(data: CreateUserDto): Promise<CreateUserResponseDto> {
     const userExists = await this.userRepository.findOne({
@@ -122,31 +124,6 @@ export class UserService {
   }
 
   async login(data: AuthDto): Promise<AuthDtoResponse> {
-    const { email, password } = data;
-    const user = await this.userRepository.findOne({
-      where: {
-        email,
-      },
-    });
-    if (!user) {
-      throw new HttpException(
-        'O e-mail não está cadastrado. Por favor, verifique se está correto.',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
-    if (await this.bcryptService.comparePasswords(password, user.password)) {
-      const token = await this.jWTService.login(user.id, '72h');
-      return {
-        message: 'Autenticação bem-sucedida.',
-        statusCode: HttpStatus.OK,
-        token,
-      };
-    } else {
-      throw new HttpException(
-        'Senha incorreta. Tente novamente.',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
+    return await this.authService.login(data);
   }
 }

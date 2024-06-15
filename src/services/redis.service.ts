@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import Redis from 'ioredis';
-import { caching } from 'cache-manager';
 
 dotenv.config();
 
