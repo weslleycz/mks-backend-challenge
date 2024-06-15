@@ -6,7 +6,6 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,7 +14,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { InterceptorAuth } from '../middlewares/interceptorAuth.middleware';
 import {
   AuthDto,
   AuthDtoResponse,
@@ -111,7 +109,6 @@ export class UserController {
 
   @Patch()
   @ApiOperation({ summary: 'Atualizar informações do usuário' })
-  @UseInterceptors(InterceptorAuth)
   @ApiBearerAuth()
   @ApiResponse({
     status: 401,

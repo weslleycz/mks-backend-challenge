@@ -2,11 +2,12 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
-import { CreateUserDto, AuthDto, UpdateUserDto } from './dto';
+import { AuthDto, CreateUserDto } from './dto';
 import { UserService } from './user.service';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let userService: UserService;
 
   beforeAll(async () => {
@@ -110,6 +111,36 @@ describe('UserController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/user/auth')
         .send(authDto)
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('PATCH /user', () => {
+    it('Deve atualizar as informações do usuário com um token de autenticação válido.', async () => {
+      const updateUserDto = {
+        name: 'teste',
+      };
+      const authDto: AuthDto = {
+        email: 'joaosilva@example.com',
+        password: 'SenhaForte123@',
+      };
+      const login = await request(app.getHttpServer())
+        .post('/user/auth')
+        .send(authDto)
+        .expect(HttpStatus.CREATED);
+      await request(app.getHttpServer())
+        .patch('/user')
+        .send(updateUserDto)
+        .auth(login.body.token, { type: 'bearer' })
+        .expect(HttpStatus.OK);
+    });
+    it('Deve retornar 401 se o token não for fornecido', async () => {
+      const updateUserDto = {
+        name: 'teste',
+      };
+      await request(app.getHttpServer())
+        .patch('/user')
+        .send(updateUserDto)
         .expect(HttpStatus.UNAUTHORIZED);
     });
   });

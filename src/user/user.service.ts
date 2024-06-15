@@ -113,6 +113,7 @@ export class UserService {
         statusCode: HttpStatus.OK,
       };
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         'Não foi possível atualizar o usuário.',
         HttpStatus.BAD_REQUEST,
