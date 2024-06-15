@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Req,
@@ -11,18 +12,20 @@ import {
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Request } from 'express';
 import { AuthTokenNotFound, AuthTokenUnauthorized } from '../auth/dtos';
 import { CreateResponseMovieDto } from './dtos/create-Response.user.dto';
 import { CreateErrorMovieDto } from './dtos/create-error.movie.dto';
 import { CreateMovieDto } from './dtos/create.movie.dto';
+import { MovieDto } from './dtos/movie.dto';
 import { UpdateMovieDto } from './dtos/update.movie.dto';
 import { MovieService } from './movie.service';
-import { Request } from 'express';
-import { MovieEntity } from './entities';
-import { MovieDto } from './dtos/movie.dto';
+import { MovieResponseNotFoundDto } from './dtos/movieResponseNotFound.dto';
+import { MovieResposeRemoveDto } from './dtos/remove.movie.dto';
 
 @Controller('movie')
 @ApiTags('Movie')
@@ -67,22 +70,50 @@ export class MovieController {
     type: MovieDto,
     isArray: true,
   })
-  findAll(@Req() request: Request): Promise<MovieDto[]> {
+  async findAll(@Req() request: Request): Promise<MovieDto[]> {
     return this.movieService.findAll(request.body);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.movieService.findOne(+id);
+  @ApiOperation({ summary: 'Selecionar filme por id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna o filme selecionado',
+    type: MovieDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Filme não encontrado',
+    type: MovieResponseNotFoundDto,
+  })
+  @ApiParam({ name: 'id', description: 'ID do filme' })
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.movieService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
+  @ApiParam({ name: 'id', description: 'ID do filme' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateMovieDto: UpdateMovieDto,
+  ) {
     return this.movieService.update(+id, updateMovieDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.movieService.remove(+id);
+  @ApiParam({ name: 'id', description: 'ID do filme' })
+  @ApiOperation({ summary: 'Deletar filme por id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Filme removido',
+    type: MovieResposeRemoveDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Filme não encontrado',
+    type: MovieResponseNotFoundDto,
+  })
+  async remove(@Param('id') id: string) {
+    return this.movieService.remove(id);
   }
 }
