@@ -7,7 +7,7 @@ export class LogMiddleware implements NestMiddleware {
   constructor(private readonly loggerService: LoggerService) {}
 
   use(req: Request, res: Response, next: NextFunction) {
-    console.log(req.headers.accept);
+    // console.log(req.headers.accept);
     this.loggerService.log(`Request ${req.method} ${req.originalUrl}`);
     next();
   }

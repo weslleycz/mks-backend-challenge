@@ -71,8 +71,8 @@ export class MovieController {
     type: MovieDto,
     isArray: true,
   })
-  async findAll(@Req() request: Request): Promise<MovieDto[]> {
-    return this.movieService.findAll(request.body);
+  async findAllByUser(@Req() request: Request): Promise<MovieDto[]> {
+    return this.movieService.findAllByUser(request.body);
   }
 
   @Get(':id')

@@ -60,7 +60,7 @@ export class UserService {
       const usersBD = await this.userRepository.find({
         select: ['createdAt', 'email', 'id', 'name', 'updatedAt'],
       });
-      await this.redisService.setValue(JSON.stringify(usersBD), '2h');
+      await this.redisService.setValue('users', JSON.stringify(usersBD), 7200);
       return {
         statusCode: HttpStatus.OK,
         message: 'Lista de usuários recuperada com sucesso.',
@@ -110,6 +110,7 @@ export class UserService {
           updatedAt: new Date(),
         });
       }
+      await this.redisService.delValue('users');
       return {
         message: 'Usuario atualizado',
         statusCode: HttpStatus.OK,

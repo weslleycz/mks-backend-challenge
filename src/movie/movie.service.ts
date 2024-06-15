@@ -7,12 +7,14 @@ import { CreateResponseMovieDto } from './dtos/create-Response.user.dto';
 import { AuthToken } from '../auth/dtos';
 import { MovieEntity } from './entities';
 import { MovieResposeRemoveDto } from './dtos/remove.movie.dto';
+import { RedisService } from '../services';
 
 @Injectable()
 export class MovieService {
   constructor(
     private readonly movieRepository: MovieRepository,
     private readonly userRepository: UserRepository,
+    private readonly redisService: RedisService,
   ) {}
   async create(
     createMovieDto: CreateMovieDto,
@@ -32,6 +34,7 @@ export class MovieService {
         title: createMovieDto.title,
         user: user,
       });
+      await this.redisService.delValue(user.id);
       return {
         message: 'Filme criado com sucesso',
         statusCode: HttpStatus.OK,
@@ -44,12 +47,22 @@ export class MovieService {
     }
   }
 
-  async findAll({ id }: AuthToken): Promise<MovieEntity[]> {
-    const user = await this.userRepository.findOne({
-      where: { id: id },
-      relations: ['movies'],
-    });
-    return user.movies;
+  async findAllByUser({ id }: AuthToken): Promise<MovieEntity[]> {
+    const moviesCache = await this.redisService.getValue(id);
+    if (moviesCache) {
+      return JSON.parse(moviesCache);
+    } else {
+      const user = await this.userRepository.findOne({
+        where: { id: id },
+        relations: ['movies'],
+      });
+      await this.redisService.setValue(
+        user.id,
+        JSON.stringify(user.movies),
+        7200,
+      );
+      return user.movies;
+    }
   }
 
   async findOne(id: string) {
@@ -98,9 +111,13 @@ export class MovieService {
         where: {
           id,
         },
+        relations: {
+          user: true,
+        },
       });
       if (movie) {
-        await this.movieRepository.delete(id);
+        await this.movieRepository.remove(movie);
+        await this.redisService.delValue(movie.user.id);
         return {
           message: 'Filme removido',
           statusCode: HttpStatus.OK,
@@ -109,6 +126,7 @@ export class MovieService {
         throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
+      console.log(error);
       throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
     }
   }
