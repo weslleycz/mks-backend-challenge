@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
 import { AuthDto } from '../auth/dto/auth.dto';
 import { AuthDtoResponse } from '../auth/dto/authResponse.dto';
 import { BcryptService, JWTService, RedisService } from '../services';
@@ -8,10 +9,9 @@ import {
   GetAllResponseDto,
   GetUserResponseDto,
   UpdateUserDto,
-} from './dto';
-import { UpdateResponse } from './dto/updateResponse.use.dto';
+} from './dtos';
+import { UpdateResponse } from './dtos/update-Response.use.dto';
 import { UserRepository } from './repositorys';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -115,7 +115,6 @@ export class UserService {
         statusCode: HttpStatus.OK,
       };
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         'Não foi possível atualizar o usuário.',
         HttpStatus.BAD_REQUEST,

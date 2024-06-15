@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMovieDto {
   @ApiProperty({
@@ -7,7 +7,6 @@ export class CreateMovieDto {
     description: 'A data de lançamento do filme',
   })
   @IsNotEmpty()
-  @IsDateString()
   release_date: string;
 
   @ApiProperty({ example: 'Ação', description: 'O gênero do filme' })
@@ -24,4 +23,6 @@ export class CreateMovieDto {
   @IsNotEmpty()
   @IsString()
   title: string;
+
+  id: string;
 }
