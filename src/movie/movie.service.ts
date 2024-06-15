@@ -4,6 +4,8 @@ import { UpdateMovieDto } from './dtos/update.movie.dto';
 import { MovieRepository } from './repositorys';
 import { UserRepository } from '../user/repositorys/user.repository';
 import { CreateResponseMovieDto } from './dtos/create-Response.user.dto';
+import { AuthToken } from '../auth/dtos';
+import { MovieEntity } from './entities';
 
 @Injectable()
 export class MovieService {
@@ -42,8 +44,12 @@ export class MovieService {
     }
   }
 
-  findAll() {
-    return `This action returns all movie`;
+  async findAll({ id }: AuthToken): Promise<MovieEntity[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['movies'],
+    });
+    return user.movies;
   }
 
   findOne(id: number) {

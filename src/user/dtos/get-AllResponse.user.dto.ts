@@ -5,7 +5,7 @@ import { MovieEntity } from 'src/movie/entities';
 
 type UserOmitPassword = Omit<UserEntity, 'password'>;
 
-export class UserOmitPasswordDto implements UserOmitPassword {
+export class UserOmitPasswordDto  {
   movie: MovieEntity[];
   @ApiProperty()
   id: string;

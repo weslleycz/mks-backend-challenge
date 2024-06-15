@@ -2,7 +2,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
-import { AuthDto } from '../auth/dto';
+import { AuthDto } from '../auth/dtos';
 import { CreateUserDto } from './dtos';
 import { UserService } from './user.service';
 

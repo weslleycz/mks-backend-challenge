@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { MovieController } from './movie.controller';
 import { MovieRepository } from './repositorys';
-import { RedisService } from 'src/services';
+import { RedisService } from './../services';
 import { AuthMiddleware } from '../auth/auth.middleware';
 import { UserRepository } from './../user/repositorys';
 

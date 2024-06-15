@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -13,12 +14,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthTokenNotFound, AuthTokenUnauthorized } from '../auth/dto';
+import { AuthTokenNotFound, AuthTokenUnauthorized } from '../auth/dtos';
+import { CreateResponseMovieDto } from './dtos/create-Response.user.dto';
+import { CreateErrorMovieDto } from './dtos/create-error.movie.dto';
 import { CreateMovieDto } from './dtos/create.movie.dto';
 import { UpdateMovieDto } from './dtos/update.movie.dto';
 import { MovieService } from './movie.service';
-import { CreateErrorMovieDto } from './dtos/create-error.movie.dto';
-import { CreateResponseMovieDto } from './dtos/create-Response.user.dto';
+import { Request } from 'express';
+import { MovieEntity } from './entities';
+import { MovieDto } from './dtos/movie.dto';
 
 @Controller('movie')
 @ApiTags('Movie')
@@ -56,8 +60,15 @@ export class MovieController {
   }
 
   @Get()
-  findAll() {
-    return this.movieService.findAll();
+  @ApiOperation({ summary: 'Listar filmes por usuário' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista dos filmes por usuário',
+    type: MovieDto,
+    isArray: true,
+  })
+  findAll(@Req() request: Request): Promise<MovieDto[]> {
+    return this.movieService.findAll(request.body);
   }
 
   @Get(':id')

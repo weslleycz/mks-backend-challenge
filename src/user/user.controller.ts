@@ -21,7 +21,7 @@ import {
   AuthErrDtoResponseUnauthorized,
   AuthTokenNotFound,
   AuthTokenUnauthorized,
-} from '../auth/dto';
+} from '../auth/dtos';
 import {
   CreateUserDto,
   CreateUserResponseDto,

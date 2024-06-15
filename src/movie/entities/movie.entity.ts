@@ -33,6 +33,7 @@ export class MovieEntity {
   @ApiProperty()
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.movie)
+  @ApiProperty()
+  @ManyToOne(() => UserEntity, (user) => user.movies)
   user: UserEntity;
 }

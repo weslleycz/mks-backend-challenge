@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
-import { AuthDto } from '../auth/dto/auth.dto';
-import { AuthDtoResponse } from '../auth/dto/authResponse.dto';
+import { AuthDto } from '../auth/dtos/auth.dto';
+import { AuthDtoResponse } from '../auth/dtos/authResponse.dto';
 import { BcryptService, JWTService, RedisService } from '../services';
 import {
   CreateUserDto,

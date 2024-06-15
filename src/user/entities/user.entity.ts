@@ -30,5 +30,5 @@ export class UserEntity {
   updatedAt: Date;
 
   @OneToMany(() => MovieEntity, (movie) => movie.user)
-  movie: MovieEntity[];
+  movies: MovieEntity[];
 }

@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { UserRepository } from '../user/repositorys';
-import { BcryptService, JWTService } from '../services';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { AuthDto } from './dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { BcryptService, JWTService } from '../services';
+import { UserRepository } from '../user/repositorys';
+import { AuthService } from './auth.service';
+import { AuthDto } from './dtos';
 
 describe('AuthService', () => {
   let authService: AuthService;

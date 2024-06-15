@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { AuthDto, AuthDtoResponse } from './dto';
-import { UserRepository } from '../user/repositorys';
 import { BcryptService, JWTService } from '../services';
+import { UserRepository } from '../user/repositorys';
+import { AuthDto, AuthDtoResponse } from './dtos';
 
 @Injectable()
 export class AuthService {
