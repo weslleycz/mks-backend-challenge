@@ -1,11 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as bodyParser from 'body-parser';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { AllExceptionsFilter } from './exceptions/all-exceptions.filter';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
+import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './exceptions/all-exceptions.filter';
 
 async function bootstrap() {
   // Cria uma instância da aplicação NestJS

@@ -26,6 +26,7 @@ import { UpdateMovieDto } from './dtos/update.movie.dto';
 import { MovieService } from './movie.service';
 import { MovieResponseNotFoundDto } from './dtos/movieResponseNotFound.dto';
 import { MovieResposeRemoveDto } from './dtos/remove.movie.dto';
+import { UpdateResponseMovieDto } from './dtos/update-response.movie.dto';
 
 @Controller('movie')
 @ApiTags('Movie')
@@ -92,12 +93,23 @@ export class MovieController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Atualizar filme' })
+  @ApiResponse({
+    status: 200,
+    description: 'Filme atualizado',
+    type: UpdateResponseMovieDto,
+  })
   @ApiParam({ name: 'id', description: 'ID do filme' })
+  @ApiResponse({
+    status: 404,
+    description: 'Filme atualizado',
+    type: MovieResponseNotFoundDto,
+  })
   async update(
     @Param('id') id: string,
     @Body() updateMovieDto: UpdateMovieDto,
   ) {
-    return this.movieService.update(+id, updateMovieDto);
+    return this.movieService.update(id, updateMovieDto);
   }
 
   @Delete(':id')

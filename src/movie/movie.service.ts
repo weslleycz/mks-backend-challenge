@@ -71,8 +71,25 @@ export class MovieService {
     }
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async update(
+    id: string,
+    { duration, genre, release_date, title }: UpdateMovieDto,
+  ) {
+    try {
+      await this.movieRepository.update(id, {
+        updatedAt: new Date(),
+        duration,
+        genre,
+        release_date,
+        title,
+      });
+      return {
+        message: 'Filme atualizado',
+        statusCode: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException('Filme não encontrado', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async remove(id: string): Promise<MovieResposeRemoveDto> {
