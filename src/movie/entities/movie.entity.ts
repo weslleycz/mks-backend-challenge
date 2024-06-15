@@ -11,7 +11,19 @@ export class MovieEntity {
 
   @Column()
   @ApiProperty()
-  name: string;
+  title: string;
+
+  @Column()
+  @ApiProperty()
+  release_date: string;
+
+  @Column()
+  @ApiProperty()
+  genre: string;
+
+  @Column()
+  @ApiProperty()
+  duration: string;
 
   @Column()
   @ApiProperty()
@@ -22,5 +34,5 @@ export class MovieEntity {
   updatedAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.movie)
-  user: string;
+  user: UserEntity;
 }
