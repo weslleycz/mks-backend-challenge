@@ -1,11 +1,11 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../entities';
 import { MovieEntity } from 'src/movie/entities';
+import { UserEntity } from '../entities';
 
 type UserOmitPassword = Omit<UserEntity, 'password'>;
 
-export class UserOmitPasswordDto  {
+export class UserOmitPasswordDto {
   movie: MovieEntity[];
   @ApiProperty()
   id: string;

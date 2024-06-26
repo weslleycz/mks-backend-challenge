@@ -28,7 +28,7 @@ export class AuthService {
       const token = await this.jWTService.login(user.id, '72h');
       return {
         message: 'Autenticação bem-sucedida.',
-        statusCode: HttpStatus.OK,
+        statusCode: HttpStatus.CREATED,
         token,
       };
     } else {

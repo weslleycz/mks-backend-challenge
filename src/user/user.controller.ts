@@ -25,11 +25,11 @@ import {
 import {
   CreateUserDto,
   CreateUserResponseDto,
-  GetAllResponseDto,
   GetUserErrResponseDto,
   GetUserResponseDto,
   UpdateUserDto,
   UserExistsErrResponseDto,
+  UserOmitPasswordDto,
 } from './dtos';
 import { UpdateResponse } from './dtos/update-Response.use.dto';
 import { UserService } from './user.service';
@@ -42,7 +42,7 @@ export class UserController {
   @Post()
   @ApiOperation({ summary: 'Criar um novo usuário' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Usuário criado com sucesso.',
     type: CreateUserResponseDto,
   })
@@ -61,9 +61,9 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Lista de todos os usuários.',
-    type: GetAllResponseDto,
+    type: UserOmitPasswordDto,
   })
-  async getAll(): Promise<GetAllResponseDto> {
+  async getAll(): Promise<UserOmitPasswordDto> {
     return await this.userService.getAll();
   }
 

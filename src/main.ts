@@ -6,6 +6,9 @@ import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './exceptions/all-exceptions.filter';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 async function bootstrap() {
   // Cria uma instância da aplicação NestJS
@@ -26,7 +29,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('/doc', app, document);
+  SwaggerModule.setup('/docs', app, document);
 
   app.useGlobalFilters(new AllExceptionsFilter());
 
@@ -41,6 +44,6 @@ async function bootstrap() {
   // Aplica o pipe de validação globalmente
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

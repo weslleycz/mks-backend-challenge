@@ -37,7 +37,7 @@ export class MovieService {
       await this.redisService.delValue(user.id);
       return {
         message: 'Filme criado com sucesso',
-        statusCode: HttpStatus.OK,
+        statusCode: HttpStatus.CREATED,
       };
     } catch (error) {
       throw new HttpException(
@@ -89,6 +89,14 @@ export class MovieService {
     { duration, genre, release_date, title }: UpdateMovieDto,
   ) {
     try {
+      const movie = await this.movieRepository.findOne({
+        where: {
+          id,
+        },
+        relations: {
+          user: true,
+        },
+      });
       await this.movieRepository.update(id, {
         updatedAt: new Date(),
         duration,
@@ -96,12 +104,13 @@ export class MovieService {
         release_date,
         title,
       });
+      await this.redisService.delValue(movie.user.id);
       return {
         message: 'Filme atualizado',
         statusCode: HttpStatus.OK,
       };
     } catch (error) {
-      throw new HttpException('Filme não encontrado', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);
     }
   }
 
@@ -120,7 +129,7 @@ export class MovieService {
         await this.redisService.delValue(movie.user.id);
         return {
           message: 'Filme removido',
-          statusCode: HttpStatus.OK,
+          statusCode: HttpStatus.CREATED,
         };
       } else {
         throw new HttpException('Filme não encontrado', HttpStatus.NOT_FOUND);

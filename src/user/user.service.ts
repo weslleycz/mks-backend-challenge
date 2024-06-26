@@ -6,11 +6,10 @@ import { BcryptService, JWTService, RedisService } from '../services';
 import {
   CreateUserDto,
   CreateUserResponseDto,
-  GetAllResponseDto,
   GetUserResponseDto,
+  UpdateResponse,
   UpdateUserDto,
 } from './dtos';
-import { UpdateResponse } from './dtos/update-Response.use.dto';
 import { UserRepository } from './repositorys';
 
 @Injectable()
@@ -41,7 +40,7 @@ export class UserService {
       await this.redisService.delValue('users');
       return {
         message: 'Usuário criado com sucesso!',
-        statusCode: HttpStatus.OK,
+        statusCode: HttpStatus.CREATED,
         token,
       };
     } else {
@@ -52,7 +51,7 @@ export class UserService {
     }
   }
 
-  async getAll(): Promise<GetAllResponseDto> {
+  async getAll() {
     const usersCache = await this.redisService.getValue('users');
     if (usersCache) {
       return JSON.parse(usersCache);
@@ -61,11 +60,7 @@ export class UserService {
         select: ['createdAt', 'email', 'id', 'name', 'updatedAt'],
       });
       await this.redisService.setValue('users', JSON.stringify(usersBD), 7200);
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Lista de usuários recuperada com sucesso.',
-        users: usersBD,
-      };
+      return [...usersBD];
     }
   }
 

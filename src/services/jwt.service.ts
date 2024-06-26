@@ -7,24 +7,24 @@ dotenv.config();
 
 @Injectable()
 export class JWTService {
-  private secretKey: Secret;
+  private SECURITY_JWT: Secret;
 
   constructor(private readonly redisService: RedisService) {
-    this.secretKey = process.env.Security_JWT;
+    this.SECURITY_JWT = process.env.SECURITY_JWT;
   }
 
   public async login(id: string, expiresIn: string): Promise<string> {
     const payload = {
       data: id,
     };
-    const token = sign(payload, this.secretKey, { expiresIn });
+    const token = sign(payload, this.SECURITY_JWT, { expiresIn });
     await this.redisService.setValue(token, id, 259200);
     return token;
   }
 
   public verify(token: string): boolean {
     try {
-      verify(token, this.secretKey);
+      verify(token, this.SECURITY_JWT);
       return true;
     } catch (err) {
       return false;

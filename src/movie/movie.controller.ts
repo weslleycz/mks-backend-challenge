@@ -102,7 +102,7 @@ export class MovieController {
   @ApiParam({ name: 'id', description: 'ID do filme' })
   @ApiResponse({
     status: 404,
-    description: 'Filme atualizado',
+    description: 'Filme não encontrado',
     type: MovieResponseNotFoundDto,
   })
   async update(
@@ -116,7 +116,7 @@ export class MovieController {
   @ApiParam({ name: 'id', description: 'ID do filme' })
   @ApiOperation({ summary: 'Deletar filme por id' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Filme removido',
     type: MovieResposeRemoveDto,
   })
